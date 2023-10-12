@@ -14,7 +14,7 @@ async def list_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         return
 
     try:
-        await update.message.reply_text(triggers_message(get_triggers()))
+        await update.message.reply_html(triggers_message(get_triggers()))
     except Exception as e:
         await update.message.reply_text(error_message(e))
 
