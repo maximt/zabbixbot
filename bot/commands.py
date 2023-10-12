@@ -3,8 +3,10 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from .messages import error_message, ping_message, triggers_message
-from .parsers import parse_ping_command
+from .parsers import parse_ping_command, parse_ping_reply_command
 from .zabbix import get_triggers
+
+PING_COUNT_MAX = 100
 
 
 async def list_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -22,7 +24,14 @@ async def ping_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         return
 
     try:
-        hostname, count = parse_ping_command(str(update.message.text))
+        if update.message.reply_to_message:
+            hostname, count = parse_ping_reply_command(
+                str(update.message.text), str(update.message.reply_to_message.text)
+            )
+        else:
+            hostname, count = parse_ping_command(str(update.message.text))
+
+        count = max(1, min(count, PING_COUNT_MAX))
         pong = ping(hostname, count=count, privileged=False)
         await update.message.reply_text(ping_message(pong))
     except Exception as e:
