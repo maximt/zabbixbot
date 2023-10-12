@@ -1,5 +1,6 @@
 from icmplib import ping
 from telegram import Update
+from telegram.constants import ChatAction
 from telegram.ext import ContextTypes
 
 from .messages import error_message, ping_message, triggers_message
@@ -13,6 +14,10 @@ async def list_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     if not update.message:
         return
 
+    await context.bot.send_chat_action(
+        chat_id=update.message.chat_id, action=ChatAction.TYPING
+    )
+
     try:
         await update.message.reply_html(triggers_message(get_triggers()))
     except Exception as e:
@@ -22,6 +27,10 @@ async def list_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 async def ping_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
+
+    await context.bot.send_chat_action(
+        chat_id=update.message.chat_id, action=ChatAction.TYPING
+    )
 
     try:
         if update.message.reply_to_message:
