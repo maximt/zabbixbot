@@ -24,7 +24,7 @@ def parse_ping_command(text: str) -> Tuple[str, int]:
 
 def parse_ping_reply_command(text: str, reply_text: str) -> Tuple[str, int]:
     result = re.search(
-        r"host:.+\(([a-z\d\.\-]+?)\)", reply_text, re.MULTILINE | re.IGNORECASE
+        r"host:.+\(([a-z\d\.-]+?)\)", reply_text, re.MULTILINE | re.IGNORECASE
     )
     if not result:
         raise ValueError("Host not found in this message")
