@@ -1,10 +1,9 @@
 import os
 
+from commands import list_command, ping_command
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import Application, CommandHandler
-
-from bot.commands import list_command, ping_command
 
 load_dotenv()
 

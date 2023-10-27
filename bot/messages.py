@@ -1,6 +1,5 @@
 from icmplib.models import Host
-
-from .zabbix import HostTrigger
+from zabbix import HostTrigger
 
 PRIORITY_ICONS = [
     "⚪ ",

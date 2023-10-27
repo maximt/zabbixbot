@@ -1,11 +1,10 @@
 from icmplib import ping
+from messages import error_message, ping_message, triggers_message
+from parsers import parse_ping_command, parse_ping_reply_command
 from telegram import Update
 from telegram.constants import ChatAction
 from telegram.ext import ContextTypes
-
-from .messages import error_message, ping_message, triggers_message
-from .parsers import parse_ping_command, parse_ping_reply_command
-from .zabbix import get_triggers
+from zabbix import get_triggers
 
 PING_COUNT_MAX = 100
 
