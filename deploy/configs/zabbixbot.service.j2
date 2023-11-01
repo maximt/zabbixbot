@@ -1,0 +1,12 @@
+[Unit]
+Description=zabbixbot service
+
+[Service]
+Type=simple
+User={{ app_user }}
+Group={{ app_group }}
+WorkingDirectory={{ app_path }}
+ExecStart=/usr/local/bin/poetry run python bot/start.py
+
+[Install]
+WantedBy=multi-user.target

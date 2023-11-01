@@ -1,0 +1,72 @@
+- name: Deploy zabbixbot Project
+  hosts: appserver
+  become: yes
+
+  tasks:
+
+    - name: Install pip
+      ansible.builtin.apt:
+        name:
+          - python3
+          - python3-pip
+          - git
+        state: present
+        update_cache: yes
+
+    - name: Install poetry
+      ansible.builtin.pip:
+        name: poetry
+
+    - name: Clone code to the server
+      git:
+        repo: "{{ app_repo }}"
+        dest: "{{ app_path }}"
+        force: yes
+
+    - name: Copy .env
+      ansible.builtin.copy:
+        src: "configs/.env"
+        dest: "{{ app_path }}/.env"
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: '0644'
+
+    - name: Change ownership of a files
+      ansible.builtin.file:
+        path: "{{ app_path }}"
+        recurse: yes
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+
+    - name: Install dependencies
+      become_user: "{{ app_user }}"
+      command: poetry install --only main
+      args:
+        chdir: "{{ app_path }}"
+      register: msg
+      changed_when:
+        - not 'No dependencies to install or update' in msg.stdout
+
+    - name: Stop service
+      systemd:
+        name: zabbixbot.service
+        state: stopped
+
+    - name: Copy systemd unit file
+      ansible.builtin.template:
+        src: configs/zabbixbot.service.j2
+        dest: /etc/systemd/system/zabbixbot.service
+        mode: '0644'
+
+    - name: Reload systemd
+      command: systemctl daemon-reload
+
+    - name: Enable service
+      systemd:
+        name: zabbixbot.service
+        enabled: yes
+
+    - name: Start service
+      systemd:
+        name: zabbixbot.service
+        state: started

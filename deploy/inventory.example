@@ -1,0 +1,10 @@
+[all:vars]
+ansible_user = ansible
+
+app_user = zabbixbot
+app_group = zabbixbot
+app_path = /opt/zabbixbot
+app_repo = https://github.com/maximt/zabbixbot.git
+
+[appserver]
+server:port
