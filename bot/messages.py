@@ -33,3 +33,14 @@ def ping_message(pong: Host) -> str:
 
 def error_message(e: Exception) -> str:
     return str(e)
+
+
+def help_message() -> str:
+    return """
+/list
+/ping <hostname> [count]
+
+You can reply to zabbix's message using the following commands:
+
+/ping [count]
+"""
