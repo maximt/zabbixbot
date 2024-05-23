@@ -3,6 +3,8 @@ Description=zabbixbot service
 
 [Service]
 Type=simple
+Restart=on-failure
+RestartSec=10s
 User={{ app_user }}
 Group={{ app_group }}
 WorkingDirectory={{ app_path }}
